@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FitTrack: Fitness, Workout and Lean Bulking Tracker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#ECEEF0;--card:#FFFFFF;--ink:#16202B;--mute:#5B6773;--line:#CBD1D7;--blue:#2150E8;--plate:#FFC62E;--ok:#157A4B;--bad:#B3261E;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161D;--card:#1A232D;--ink:#E8ECEF;--mute:#9AA6B2;--line:#2F3B47;--blue:#6B8CFF;--ok:#4CC38A;--bad:#FF8A80}}
+:root[data-theme="dark"]{--bg:#10161D;--card:#1A232D;--ink:#E8ECEF;--mute:#9AA6B2;--line:#2F3B47;--blue:#6B8CFF;--ok:#4CC38A;--bad:#FF8A80}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Barlow,system-ui,sans-serif}
+h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:800;line-height:1.05;margin:0 0 .5em;letter-spacing:.01em}
+h1{font-size:clamp(2.6rem,9vw,5rem)}h2{font-size:2rem}h3{font-size:1.25rem;font-weight:600}
+a{color:var(--blue)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:var(--bg)}
+.bar{max-width:1000px;margin:auto;display:flex;align-items:center;gap:16px;padding:8px 16px}
+.brand{font:800 1.6rem "Barlow Condensed",sans-serif;color:var(--plate);text-decoration:none;letter-spacing:.04em}
+nav{display:flex;gap:2px;overflow-x:auto;flex:1}
+nav a{color:inherit;text-decoration:none;padding:8px 12px;white-space:nowrap;border-bottom:3px solid transparent;font-weight:500}
+nav a.on{border-color:var(--plate)}
+main{max-width:1000px;margin:auto;padding:24px 16px 56px}
+.page{display:none}.page.on{display:block}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px}
+.big{font:800 2.4rem "Barlow Condensed",sans-serif;line-height:1}
+.mute{color:var(--mute);font-size:.9rem}
+.bar2{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:10px}.bar2>i{display:block;height:100%;background:var(--blue)}
+.btn{font:600 1rem Barlow,sans-serif;background:var(--blue);color:#fff;border:0;border-radius:6px;padding:10px 18px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn.plate{background:var(--plate);color:#16202B}
+.btn.sm{padding:4px 10px;font-size:.85rem}
+form{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-items:end}
+label{display:grid;gap:4px;font-weight:500;font-size:.9rem}
+input,select{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.err{color:var(--bad);font-weight:500;min-height:1.4em;grid-column:1/-1}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:20px 0}
+.week div{border:1px solid var(--ink);border-radius:6px;padding:8px 4px;text-align:center;font-weight:600;font-size:.8rem;background:var(--card);overflow-wrap:anywhere}
+.week div b{display:block;font:800 1.1rem "Barlow Condensed",sans-serif}
+.week .today{background:var(--plate);color:#16202B;border-color:var(--plate)}
+.days{display:flex;gap:6px;overflow-x:auto;margin:12px 0}.days button{flex:0 0 auto}
+.days .btn.alt.on{background:var(--ink);color:var(--bg)}
+ul.list{list-style:none;margin:0;padding:0}
+ul.list li{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+ul.list li:last-child{border:0}
+.ex{display:flex;gap:12px;align-items:center;flex:1}.ex input{width:22px;height:22px}
+.done .nm{text-decoration:line-through;color:var(--mute)}
+.scroll{overflow-x:auto}
+svg text{fill:var(--mute);font:12px Barlow,sans-serif}
+.res{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:16px}
+.sp{margin-top:20px}
+@media (prefers-reduced-motion:no-preference){.bar2>i{transition:width .4s}}
+</style>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="#home">FITTRACK</a>
+<nav id="nav"><a href="#home">Home</a><a href="#dashboard">Dashboard</a><a href="#workout">Workout plan</a><a href="#nutrition">Nutrition</a><a href="#calc">Calorie calculator</a><a href="#weight">Weight progress</a><a href="#profile">Profile</a></nav></div></header>
+<main>
+
+<section class="page" id="home">
+<h1>Train, eat, weigh in. See the trend.</h1>
+<p style="max-width:56ch;font-size:1.15rem">FitTrack keeps your workouts, meals and body weight in one place, and estimates a calorie target for lean bulking, maintaining or fat loss.</p>
+<div class="week" id="heroWeek" aria-label="This week's training split"></div>
+<p><a class="btn plate" href="#profile">Get started</a> <a class="btn alt" href="#dashboard">Open dashboard</a></p>
+<div class="grid sp">
+<div class="card"><h3>Dashboard</h3><p class="mute">Today's calories, protein, workout and latest weight.</p></div>
+<div class="card"><h3>Workout planner</h3><p class="mute">Pick a 5-day or Push/Pull/Legs split and tick off exercises.</p></div>
+<div class="card"><h3>Meal tracker</h3><p class="mute">Log foods with calories, protein, carbs and fat.</p></div>
+<div class="card"><h3>Calorie calculator</h3><p class="mute">Mifflin–St Jeor estimate with a modest surplus for lean bulking.</p></div>
+<div class="card"><h3>Weight tracker</h3><p class="mute">Dated entries and a chart of your trend.</p></div>
+<div class="card"><h3>Profile and goal</h3><p class="mute">Set a goal weight and see your progress toward it.</p></div>
+</div>
+</section>
+
+<section class="page" id="dashboard">
+<h2>Dashboard</h2>
+<div class="grid" id="dashCards"></div>
+<div class="card sp"><h3>Goal progress</h3><div id="goalBox" class="mute"></div></div>
+<div class="card sp"><h3>Today's tip</h3><div id="tip"></div></div>
+</section>
+
+<section class="page" id="workout">
+<h2>Workout plan</h2>
+<label style="max-width:260px">Split<select id="split"><option value="five">5-day split</option><option value="ppl">Push / Pull / Legs</option></select></label>
+<div class="days" id="days"></div>
+<div class="card"><h3 id="dayTitle"></h3><ul class="list" id="exList"></ul></div>
+<p class="mute">Example plan for demonstration, not an individual training prescription. Adapt exercises to your experience, injuries and equipment.</p>
+</section>
+
+<section class="page" id="nutrition">
+<h2>Nutrition tracker</h2>
+<div class="grid" id="mealTotals"></div>
+<form id="mealForm" class="card sp" novalidate>
+<label>Food<input id="mName" placeholder="Chicken rice bowl"></label>
+<label>Serving<input id="mServ" placeholder="1 bowl"></label>
+<label>Calories<input id="mCal" type="number" min="0" inputmode="decimal"></label>
+<label>Protein (g)<input id="mP" type="number" min="0" inputmode="decimal"></label>
+<label>Carbs (g)<input id="mC" type="number" min="0" inputmode="decimal"></label>
+<label>Fat (g)<input id="mF" type="number" min="0" inputmode="decimal"></label>
+<button class="btn" type="submit">Add meal</button>
+<div class="err" id="mErr" role="alert"></div>
+</form>
+<div class="card sp"><h3>Today's meals</h3><ul class="list" id="mealList"></ul></div>
+</section>
+
+<section class="page" id="calc">
+<h2>Calorie calculator</h2>
+<form id="calcForm" class="card" novalidate>
+<label>Age<input id="cAge" type="number" inputmode="numeric"></label>
+<label>Sex<select id="cSex"><option value="m">Male</option><option value="f">Female</option></select></label>
+<label>Height (cm)<input id="cH" type="number" inputmode="decimal"></label>
+<label>Weight (kg)<input id="cW" type="number" inputmode="decimal"></label>
+<label>Activity<select id="cAct"><option value="1.2">Sedentary</option><option value="1.375">Light (1–3 days/week)</option><option value="1.55" selected>Moderate (3–5 days/week)</option><option value="1.725">Very active (6–7 days/week)</option></select></label>
+<label>Goal<select id="cGoal"><option value="bulk">Lean bulk</option><option value="maintain">Maintain</option><option value="cut">Fat loss</option></select></label>
+<button class="btn" type="submit">Calculate</button>
+<div class="err" id="cErr" role="alert"></div>
+</form>
+<div id="cOut"></div>
+<p class="mute">Educational estimate using the Mifflin–St Jeor equation, not medical advice. Adjust gradually based on several weeks of weight trend, and see a qualified professional for medical or nutrition concerns.</p>
+</section>
+
+<section class="page" id="weight">
+<h2>Weight progress</h2>
+<form id="wForm" class="card" novalidate>
+<label>Date<input id="wDate" type="date"></label>
+<label>Weight (kg)<input id="wVal" type="number" step="0.1" inputmode="decimal"></label>
+<button class="btn" type="submit">Save weight</button>
+<div class="err" id="wErr" role="alert"></div>
+</form>
+<div class="card sp"><h3>Trend</h3><div class="scroll" id="chart"></div></div>
+<div class="card sp"><h3>History</h3><div id="wSum" class="mute"></div><ul class="list" id="wList"></ul></div>
+</section>
+
+<section class="page" id="profile">
+<h2>Profile and goal</h2>
+<form id="pForm" class="card" novalidate>
+<label>Name or nickname<input id="pName"></label>
+<label>Age<input id="pAge" type="number" inputmode="numeric"></label>
+<label>Sex (used for calculation)<select id="pSex"><option value="m">Male</option><option value="f">Female</option></select></label>
+<label>Height (cm)<input id="pH" type="number" inputmode="decimal"></label>
+<label>Current weight (kg)<input id="pW" type="number" step="0.1" inputmode="decimal"></label>
+<label>Goal weight (kg)<input id="pG" type="number" step="0.1" inputmode="decimal"></label>
+<label>Goal type<select id="pGoal"><option value="bulk">Lean bulk</option><option value="maintain">Maintain</option><option value="cut">Fat loss</option></select></label>
+<label>Activity level<select id="pAct"><option value="1.2">Sedentary</option><option value="1.375">Light</option><option value="1.55" selected>Moderate</option><option value="1.725">Very active</option></select></label>
+<button class="btn" type="submit">Save profile</button>
+<div class="err" id="pErr" role="alert"></div>
+</form>
+<p class="mute">Your data is saved only in this browser. Don't enter passwords or other sensitive details.</p>
+<button class="btn alt sm" id="reset" type="button">Clear all saved data</button>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const K='fittrack:v1';
+let S={profile:null,meals:[],weights:[],done:{},split:'five',target:null};
+try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const pad=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r1=n=>Math.round(n*10)/10;
+const GL={bulk:'Lean bulk',maintain:'Maintain',cut:'Fat loss'};
+
+const EX={
+'Push':[['Bench press','4 × 6–8'],['Incline dumbbell press','3 × 8–10'],['Shoulder press','3 × 8–10'],['Triceps pushdown','3 × 10–12']],
+'Pull':[['Lat pulldown','4 × 8–10'],['Seated row','3 × 8–10'],['Face pull','3 × 12–15'],['Biceps curl','3 × 10–12']],
+'Legs':[['Squat or leg press','4 × 6–8'],['Romanian deadlift','3 × 8–10'],['Leg curl','3 × 10–12'],['Calf raise','4 × 12–15']],
+'Upper body':[['Chest-supported row','3 × 8–10'],['Dumbbell press','3 × 8–10'],['Lateral raise','3 × 12–15'],['Arms (curls and extensions)','3 × 10–12']],
+'Lower body + core':[['Leg press','4 × 8–10'],['Hip hinge','3 × 8–10'],['Leg extension','3 × 10–12'],['Plank','3 × 45 sec']],
+'Recovery':[['Rest, walking or light mobility','20–30 min']]};
+const PLAN={five:['Push','Pull','Legs','Upper body','Lower body + core','Recovery','Recovery'],
+ppl:['Push','Pull','Legs','Push','Pull','Legs','Recovery']};
+const DN=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TIPS=['Drink water through the day. Keep a bottle next to you while you train.','Aim for 7–9 hours of sleep. Muscle repair happens while you rest.','Consistency beats intensity. A completed session each planned day matters most.','Weigh in at the same time each morning and judge the weekly average, not one day.','Spread protein over 3–5 meals instead of one big serving.','Warm up with light sets of your first exercise before working sets.','Change calories by small steps (about 100–200 kcal) if the trend stalls for 2–3 weeks.'];
+const tIdx=(new Date().getDay()+6)%7;
+let wd=tIdx;
+
+function calc(a,sx,h,w,act,goal){
+ const bmr=10*w+6.25*h-5*a+(sx==='m'?5:-161),m=bmr*act;
+ const adj={bulk:250,maintain:0,cut:-400}[goal];
+ return{bmr:Math.round(bmr),m:Math.round(m),kcal:Math.round(m+adj),p:Math.round(w*1.8)};
+}
+function chk(v,lo,hi){return v!==''&&!isNaN(v)&&+v>=lo&&+v<=hi}
+
+/* navigation */
+function route(){
+ const id=($$('.page').some(p=>'#'+p.id===location.hash)?location.hash:'#home').slice(1);
+ $$('.page').forEach(p=>p.classList.toggle('on',p.id===id));
+ $$('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));
+ scrollTo(0,0);
+}
+addEventListener('hashchange',route);
+
+/* render */
+function dayItems(split,i){return EX[PLAN[split][i]]}
+function doneKey(i,j){return today()+'|'+S.split+'|'+i+'|'+j}
+function render(){
+ // hero week
+ $('#heroWeek').innerHTML=PLAN[S.split].map((f,i)=>`<div class="${i===tIdx?'today':''}"><b>${DN[i]}</b>${esc(f==='Lower body + core'?'Lower + core':f)}</div>`).join('');
+ // dashboard
+ const ms=S.meals.filter(m=>m.date===today());
+ const tot=ms.reduce((a,m)=>({c:a.c+m.cal,p:a.p+m.p,cb:a.cb+m.c,f:a.f+m.f}),{c:0,p:0,cb:0,f:0});
+ const T=S.target,items=dayItems(S.split,tIdx);
+ const dn=items.filter((_,j)=>S.done[doneKey(tIdx,j)]).length;
+ const ws=[...S.weights].sort((a,b)=>a.date.localeCompare(b.date));
+ const last=ws[ws.length-1],first=ws[0];
+ const pct=(v,t)=>t?Math.min(100,Math.round(v/t*100)):0;
+ $('#dashCards').innerHTML=`
+ <div class="card"><div class="mute">Calories today</div><div class="big">${Math.round(tot.c)}${T?' / '+T.kcal:''}</div><div class="bar2"><i style="width:${pct(tot.c,T&&T.kcal)}%"></i></div></div>
+ <div class="card"><div class="mute">Protein today</div><div class="big">${Math.round(tot.p)}${T?' / '+T.p:''} g</div><div class="bar2"><i style="width:${pct(tot.p,T&&T.p)}%"></i></div></div>
+ <div class="card"><div class="mute">Today's workout: ${esc(PLAN[S.split][tIdx])}</div><div class="big">${dn} / ${items.length}</div><div class="bar2"><i style="width:${pct(dn,items.length)}%"></i></div></div>
+ <div class="card"><div class="mute">Latest weight</div><div class="big">${last?last.kg+' kg':'None yet'}</div><div class="mute">${last&&first&&ws.length>1?'Change since start: '+(r1(last.kg-first.kg)>0?'+':'')+r1(last.kg-first.kg)+' kg':'<a href="#weight">Add a weight entry</a>'}</div></div>`;
+ const p=S.profile;
+ if(p&&last){const start=first.kg,goal=p.goalW;
+  let pr=goal===start?100:Math.max(0,Math.min(100,Math.round((last.kg-start)/(goal-start)*100)));
+  $('#goalBox').innerHTML=`<p style="margin:0 0 6px">${esc(GL[p.goal])}: ${start} kg → ${goal} kg. Now ${last.kg} kg (${pr}% of the way).</p><div class="bar2"><i style="width:${pr}%"></i></div>`}
+ else $('#goalBox').innerHTML='Set a goal weight in <a href="#profile">your profile</a> and log a weight to see progress.';
+ if(!T)$('#dashCards').insertAdjacentHTML('beforeend','<div class="card" style="grid-column:1/-1">No calorie target yet. <a href="#calc">Use the calculator</a> or <a href="#profile">save your profile</a>.</div>');
+ $('#tip').textContent=TIPS[new Date().getDate()%TIPS.length];
+ // workout
+ $('#split').value=S.split;
+ $('#days').innerHTML=DN.map((d,i)=>`<button class="btn alt sm${i===wd?' on':''}" data-d="${i}">${d}${i===tIdx?' (today)':''}</button>`).join('');
+ $('#dayTitle').textContent=DN[wd]+': '+PLAN[S.split][wd];
+ $('#exList').innerHTML=dayItems(S.split,wd).map((e,j)=>{const on=S.done[doneKey(wd,j)];
+  return `<li class="${on?'done':''}"><label class="ex"><input type="checkbox" data-j="${j}" ${on?'checked':''}><span class="nm">${esc(e[0])}</span></label><span class="mute">${e[1]}</span></li>`}).join('');
+ // nutrition
+ $('#mealTotals').innerHTML=[['Calories',Math.round(tot.c)+(T?' / '+T.kcal:'')],['Protein',Math.round(tot.p)+' g'],['Carbs',Math.round(tot.cb)+' g'],['Fat',Math.round(tot.f)+' g']].map(x=>`<div class="card"><div class="mute">${x[0]}</div><div class="big">${x[1]}</div></div>`).join('');
+ $('#mealList').innerHTML=ms.length?ms.map(m=>`<li><span>${esc(m.name)}${m.serv?' ('+esc(m.serv)+')':''}<br><span class="mute">${m.cal} kcal · P ${m.p} · C ${m.c} · F ${m.f}</span></span><button class="btn alt sm" data-del="${m.id}">Delete</button></li>`).join(''):'<li class="mute">No meals logged today. Add your first meal above.</li>';
+ // weight
+ $('#wList').innerHTML=ws.length?[...ws].reverse().map(w=>`<li><span>${w.date}</span><b>${w.kg} kg</b><button class="btn alt sm" data-wdel="${w.date}">Delete</button></li>`).join(''):'<li class="mute">No entries yet. Save your first weight above.</li>';
+ $('#wSum').textContent=ws.length>1?`Start ${first.kg} kg, latest ${last.kg} kg, change ${r1(last.kg-first.kg)>0?'+':''}${r1(last.kg-first.kg)} kg.`:'';
+ chart(ws);
+}
+function chart(ws){
+ if(ws.length<2){$('#chart').innerHTML='<p class="mute">Add at least two weight entries to see a chart.</p>';return}
+ const W=640,H=230,L=44,B=28,Tp=14,R=14;
+ const ys=ws.map(w=>w.kg),lo=Math.floor(Math.min(...ys)-1),hi=Math.ceil(Math.max(...ys)+1);
+ const t0=new Date(ws[0].date).getTime(),t1=new Date(ws[ws.length-1].date).getTime();
+ const x=d=>L+(t1===t0?0:(new Date(d).getTime()-t0)/(t1-t0))*(W-L-R),y=v=>Tp+(hi-v)/(hi-lo)*(H-Tp-B);
+ const pts=ws.map(w=>x(w.date)+','+y(w.kg)).join(' ');
+ $('#chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="min-width:420px;width:100%" role="img" aria-label="Body weight over time">
+ <line x1="${L}" y1="${y(lo)}" x2="${W-R}" y2="${y(lo)}" stroke="var(--line)"/><line x1="${L}" y1="${y(hi)}" x2="${W-R}" y2="${y(hi)}" stroke="var(--line)"/>
+ <text x="${L-6}" y="${y(hi)+4}" text-anchor="end">${hi}</text><text x="${L-6}" y="${y(lo)+4}" text-anchor="end">${lo}</text>
+ <text x="${L}" y="${H-6}">${ws[0].date}</text><text x="${W-R}" y="${H-6}" text-anchor="end">${ws[ws.length-1].date}</text>
+ <polyline points="${pts}" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linejoin="round"/>
+ ${ws.map(w=>`<circle cx="${x(w.date)}" cy="${y(w.kg)}" r="4" fill="var(--blue)"><title>${w.date}: ${w.kg} kg</title></circle>`).join('')}</svg>`;
+}
+
+/* events */
+$('#split').onchange=e=>{S.split=e.target.value;save();render()};
+$('#days').onclick=e=>{const b=e.target.closest('[data-d]');if(b){wd=+b.dataset.d;render()}};
+$('#exList').onchange=e=>{const j=e.target.dataset.j;if(j==null)return;const k=doneKey(wd,j);if(e.target.checked)S.done[k]=1;else delete S.done[k];save();render()};
+
+$('#mealForm').onsubmit=e=>{e.preventDefault();
+ const n=$('#mName').value.trim(),c=$('#mCal').value,p=$('#mP').value||0,cb=$('#mC').value||0,f=$('#mF').value||0;
+ if(!n)return $('#mErr').textContent='Enter a food name.';
+ if(!chk(c,0,5000))return $('#mErr').textContent='Calories must be a number from 0 to 5000.';
+ if(![p,cb,f].every(v=>chk(v,0,1000)))return $('#mErr').textContent='Protein, carbs and fat must be numbers from 0 to 1000.';
+ S.meals.push({id:Date.now(),date:today(),name:n,serv:$('#mServ').value.trim(),cal:+c,p:+p,c:+cb,f:+f});
+ save();e.target.reset();$('#mErr').textContent='';render()};
+$('#mealList').onclick=e=>{const d=e.target.dataset.del;if(d){S.meals=S.meals.filter(m=>m.id!=d);save();render()}};
+
+function addWeight(date,kg){S.weights=S.weights.filter(w=>w.date!==date);S.weights.push({date,kg})}
+$('#wForm').onsubmit=e=>{e.preventDefault();
+ const d=$('#wDate').value,v=$('#wVal').value;
+ if(!d)return $('#wErr').textContent='Choose a date.';
+ if(!chk(v,20,400))return $('#wErr').textContent='Weight must be a number from 20 to 400 kg.';
+ addWeight(d,r1(+v));save();$('#wVal').value='';$('#wErr').textContent='';render()};
+$('#wList').onclick=e=>{const d=e.target.dataset.wdel;if(d){S.weights=S.weights.filter(w=>w.date!==d);save();render()}};
+
+function readBody(pre,err){
+ const g=id=>$('#'+pre+id).value;
+ if(!chk(g('Age'),12,100)){err.textContent='Age must be from 12 to 100.';return null}
+ if(!chk(g('H'),100,230)){err.textContent='Height must be from 100 to 230 cm.';return null}
+ if(!chk(g('W'),30,300)){err.textContent='Weight must be from 30 to 300 kg.';return null}
+ err.textContent='';return{age:+g('Age'),sex:g('Sex'),h:+g('H'),w:+g('W')};
+}
+let lastCalc=null;
+$('#calcForm').onsubmit=e=>{e.preventDefault();
+ const b=readBody('c',$('#cErr'));if(!b)return;
+ const goal=$('#cGoal').value,r=calc(b.age,b.sex,b.h,b.w,+$('#cAct').value,goal);
+ lastCalc=r;
+ $('#cOut').innerHTML=`<div class="res">
+ <div class="card"><div class="mute">BMR</div><div class="big">${r.bmr}</div><div class="mute">kcal/day</div></div>
+ <div class="card"><div class="mute">Maintenance</div><div class="big">${r.m}</div><div class="mute">kcal/day</div></div>
+ <div class="card"><div class="mute">${GL[goal]} target</div><div class="big">${r.kcal}</div><div class="mute">${goal==='bulk'?'maintenance + about 250':goal==='cut'?'maintenance − about 400':'maintenance'}</div></div>
+ <div class="card"><div class="mute">Protein</div><div class="big">${r.p} g</div><div class="mute">about 1.8 g per kg</div></div></div>
+ <p><button class="btn plate" id="useT" type="button">Use as my daily target</button></p>`;
+ $('#useT').onclick=()=>{S.target={kcal:r.kcal,protein:r.p,p:r.p};S.target.p=r.p;save();render();$('#useT').textContent='Target saved. See dashboard'; $('#useT').onclick=()=>{location.hash='#dashboard'}};
+};
+
+$('#pForm').onsubmit=e=>{e.preventDefault();
+ const err=$('#pErr'),b=readBody('p',err);if(!b)return;
+ if(!chk($('#pG').value,30,300))return err.textContent='Goal weight must be from 30 to 300 kg.';
+ const goal=$('#pGoal').value,act=+$('#pAct').value;
+ S.profile={name:$('#pName').value.trim(),age:b.age,sex:b.sex,h:b.h,w:b.w,goalW:+$('#pG').value,goal,act};
+ addWeight(today(),r1(b.w));
+ const r=calc(b.age,b.sex,b.h,b.w,act,goal);S.target={kcal:r.kcal,p:r.p};
+ save();render();err.textContent='';location.hash='#dashboard'};
+$('#reset').onclick=()=>{if(confirm('Delete all FitTrack data saved in this browser?')){S={profile:null,meals:[],weights:[],done:{},split:'five',target:null};save();fillProfile();render()}};
+
+function fillProfile(){const p=S.profile;if(!p)return;
+ $('#pName').value=p.name;$('#pAge').value=p.age;$('#pSex').value=p.sex;$('#pH').value=p.h;$('#pW').value=p.w;$('#pG').value=p.goalW;$('#pGoal').value=p.goal;$('#pAct').value=p.act;
+ $('#cAge').value=p.age;$('#cSex').value=p.sex;$('#cH').value=p.h;$('#cW').value=p.w;$('#cAct').value=p.act;$('#cGoal').value=p.goal}
+$('#wDate').value=today();
+fillProfile();render();route();
+</script>
+</body>
+</html>
